@@ -47,6 +47,9 @@ def generate_restaurant_analysis(query, restaurants, client=None):
         Highlight the best option if clear. Keep it friendly and under 150 words.
         """
         
+        # Use configurable model or default to stable version
+        model_name = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+        
         chat_completion = client.chat.completions.create(
             messages=[
                 {
@@ -54,7 +57,7 @@ def generate_restaurant_analysis(query, restaurants, client=None):
                     "content": prompt,
                 }
             ],
-            model="llama-3.3-70b-versatile", 
+            model=model_name, 
         )
         return chat_completion.choices[0].message.content
     except Exception as e:
