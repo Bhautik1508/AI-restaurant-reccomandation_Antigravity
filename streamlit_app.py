@@ -51,7 +51,7 @@ with st.sidebar:
     location = st.text_input("Location", placeholder="e.g., Koramangala, Indiranagar")
     top_k = st.slider("Number of Recommendations", 3, 10, 5)
     
-    st.divider()
+    st.markdown("---")
     search_btn = st.button("Find Restaurants", type="primary", use_container_width=True)
 
 # Main Content
@@ -106,10 +106,10 @@ if search_btn:
                                 st.markdown(f"**Rating:** {rating}/5 ⭐ | **Cost:** ₹{cost} for two")
                             with cols[1]:
                                 if url:
-                                    st.link_button("View on Zomato", url)
+                                    st.markdown(f"[**View on Zomato**]({url})")
                                 else:
-                                    st.button("No Link", disabled=True, key=f"btn_{i}")
-                            st.divider()
+                                    st.write("No Link")
+                            st.markdown("---")
 
             except Exception as e:
                 st.error(f"An error occurred: {str(e)}")
