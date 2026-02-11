@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 import pickle
 import faiss
 import pandas as pd
@@ -126,5 +127,11 @@ class RecommendationService:
                 
         return {"restaurants": results, "ai_analysis": ai_analysis}
 
-# Singleton instance
-rec_service = RecommendationService()
+# Singleton instance cached for Streamlit
+@st.cache_resource
+def get_rec_service():
+    service = RecommendationService()
+    service.load_resources()
+    return service
+
+rec_service = get_rec_service()
