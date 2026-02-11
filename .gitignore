@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+.env
+backend/data/restaurants.pkl
+backend/data/restaurants.parquet
+frontend.log
+backend.log
+frontend_v2.log
+.DS_Store
