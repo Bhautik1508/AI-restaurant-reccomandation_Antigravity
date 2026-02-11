@@ -54,7 +54,7 @@ def generate_restaurant_analysis(query, restaurants, client=None):
                     "content": prompt,
                 }
             ],
-            model="llama3-70b-8192", 
+            model="llama-3.3-70b-versatile", 
         )
         return chat_completion.choices[0].message.content
     except Exception as e:
