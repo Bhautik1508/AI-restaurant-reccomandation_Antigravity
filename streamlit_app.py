@@ -54,6 +54,10 @@ with st.sidebar:
     st.markdown("---")
     search_btn = st.button("Find Restaurants", type="primary", use_container_width=True)
 
+# Initialize session state for persistent results
+if "results" not in st.session_state:
+    st.session_state["results"] = None
+
 # Main Content
 if search_btn:
     if not cuisine and not location:
@@ -73,46 +77,52 @@ if search_btn:
                 if "error" in data:
                     st.error(f"Error: {data['error']}")
                 else:
-                    # AI Analysis Section
-                    if "ai_analysis" in data:
-                        st.subheader("🤖 AI Analysis")
-                        st.markdown(f"""
-                        <div class="ai-analysis">
-                            {data['ai_analysis']}
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    # Restaurant Cards
-                    st.subheader("Top Recommendations")
-                    restaurants = data.get("restaurants", [])
-                    
-                    if not restaurants:
-                        st.info("No restaurants found matching your criteria.")
-                    
-                    for i, r in enumerate(restaurants, 1):
-                        name = r.get('name', 'Unknown')
-                        r_cuisine = r.get('cuisine', 'N/A')
-                        r_loc = r.get('location', 'N/A')
-                        rating = r.get('rating', 'N/A')
-                        cost = r.get('cost', 'N/A')
-                        url = r.get('url')
-                        
-                        # Render Card
-                        with st.container():
-                            cols = st.columns([3, 1])
-                            with cols[0]:
-                                st.markdown(f"### {i}. {name}")
-                                st.markdown(f"**Cuisine:** {r_cuisine} | **Location:** {r_loc}")
-                                st.markdown(f"**Rating:** {rating}/5 ⭐ | **Cost:** ₹{cost} for two")
-                            with cols[1]:
-                                if url:
-                                    st.markdown(f"[**View on Zomato**]({url})")
-                                else:
-                                    st.write("No Link")
-                            st.markdown("---")
-
+                    # Store in session state for persistence
+                    st.session_state["results"] = data
             except Exception as e:
                 st.error(f"An error occurred: {str(e)}")
+
+# Display results from session state
+if st.session_state["results"]:
+    data = st.session_state["results"]
+    
+    # AI Analysis Section
+    if "ai_analysis" in data:
+        st.subheader("🤖 AI Analysis")
+        st.markdown(f"""
+        <div class="ai-analysis">
+            {data['ai_analysis']}
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Restaurant Cards
+    st.subheader("Top Recommendations")
+    restaurants = data.get("restaurants", [])
+    
+    if not restaurants:
+        st.info("No restaurants found matching your criteria.")
+    
+    for i, r in enumerate(restaurants, 1):
+        name = r.get('name', 'Unknown')
+        r_cuisine = r.get('cuisine', 'N/A')
+        r_loc = r.get('location', 'N/A')
+        rating = r.get('rating', 'N/A')
+        cost = r.get('cost', 'N/A')
+        url = r.get('url')
+        
+        # Render Card
+        with st.container():
+            cols = st.columns([3, 1])
+            with cols[0]:
+                st.markdown(f"### {i}. {name}")
+                st.markdown(f"**Cuisine:** {r_cuisine} | **Location:** {r_loc}")
+                st.markdown(f"**Rating:** {rating}/5 ⭐ | **Cost:** ₹{cost} for two")
+            with cols[1]:
+                if url:
+                    st.markdown(f"[**View on Zomato**]({url})")
+                else:
+                    st.write("No Link")
+            st.markdown("---")
 
 else:
     # Landing State
