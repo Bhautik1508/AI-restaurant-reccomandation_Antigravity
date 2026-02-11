@@ -12,4 +12,5 @@ pytest
 httpx
 streamlit
 pyarrow
+altair<5
 
